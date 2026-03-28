@@ -1,4 +1,4 @@
-# profile_card_lab
+# projects_lab
 
 A new Flutter project.
 
