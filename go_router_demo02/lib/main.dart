@@ -1,0 +1,70 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+//                                   GoRouter configuration
+final GoRouter _router = GoRouter(
+  routes: [
+    GoRoute(
+      path: '/',
+      name: 'home',
+      builder: (context, state) => const HomeScreen(),
+    ),
+    GoRoute(
+      path: '/details',
+      name: 'details',
+      builder: (context, state) => const DetailsScreen(),
+    ),
+  ],
+);
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp.router(
+      title: 'Named Routes Demo',
+      routerConfig: _router,
+    );
+  }
+}
+
+//                               Home Screen
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Home')),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () => context.goNamed('details'),
+          child: const Text('Go to Details'),
+        ),
+      ),
+    );
+  }
+}
+
+//                                      Details Screen
+class DetailsScreen extends StatelessWidget {
+  const DetailsScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Details')),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () => context.goNamed('home'),
+          child: const Text('Back to Home'),
+        ),
+      ),
+    );
+  }
+}
