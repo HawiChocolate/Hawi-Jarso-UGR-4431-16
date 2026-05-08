@@ -5,18 +5,23 @@ void main() {
   runApp(const MyApp());
 }
 
-//                                   GoRouter configuration
 final GoRouter _router = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      name: 'home',
       builder: (context, state) => const HomeScreen(),
     ),
     GoRoute(
-      path: '/details',
-      name: 'details',
-      builder: (context, state) => const DetailsScreen(),
+      path: '/product/:id',
+      builder: (context, state) {
+        final id = state.pathParameters['id'] ?? 'No ID';
+        final filter = state.uri.queryParameters['filter'] ?? 'none';
+
+        return ProductScreen(
+          productId: id,
+          filter: filter,
+        );
+      },
     ),
   ],
 );
@@ -27,42 +32,58 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'Named Routes Demo',
+      title: 'go_router demo02',
       routerConfig: _router,
+      debugShowCheckedModeBanner: false,
     );
   }
 }
 
-//                               Home Screen
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Home')),
+      appBar: AppBar(
+        title: const Text('Home'),
+      ),
       body: Center(
         child: ElevatedButton(
-          onPressed: () => context.goNamed('details'),
-          child: const Text('Go to Details'),
+          onPressed: () {
+            context.go('/product/42?filter=popular');
+          },
+          child: const Text('Go to Product 42'),
         ),
       ),
     );
   }
 }
 
-//                                      Details Screen
-class DetailsScreen extends StatelessWidget {
-  const DetailsScreen({super.key});
+class ProductScreen extends StatelessWidget {
+  final String productId;
+  final String filter;
+
+  const ProductScreen({
+    super.key,
+    required this.productId,
+    required this.filter,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Details')),
+      appBar: AppBar(
+        title: Text('Product $productId'),
+      ),
       body: Center(
-        child: ElevatedButton(
-          onPressed: () => context.goNamed('home'),
-          child: const Text('Back to Home'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Showing product $productId'),
+            const SizedBox(height: 10),
+            Text('Filter: $filter'),
+          ],
         ),
       ),
     );
